@@ -21,6 +21,7 @@ import CollectionsPage from "./pages/CollectionsPage";
 import AboutPage from "./pages/AboutPage";
 import OurStoryPage from "./pages/OurStoryPage";
 import BestSellersPage from "./pages/BestSellersPage";
+import GoldCollectionPage from "./pages/GoldCollectionPage";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/our-story" element={<OurStoryPage />} />
                 <Route path="/collections/best-sellers" element={<BestSellersPage />} />
+                <Route path="/collections/gold" element={<GoldCollectionPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
