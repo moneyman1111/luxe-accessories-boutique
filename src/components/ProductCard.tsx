@@ -5,6 +5,8 @@ import { Heart, ShoppingBag, Eye } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import { useProducts } from '@/context/ProductContext';
+import { toast } from 'sonner';
 
 export interface ProductType {
   id: number;
@@ -26,6 +28,7 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const { addToCart } = useProducts();
   
   // Toggle image on hover if multiple images exist
   const handleMouseEnter = () => {
@@ -38,6 +41,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const handleMouseLeave = () => {
     setIsHovered(false);
     setImageIndex(0);
+  };
+  
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product, 1);
+    toast.success(`${product.name} added to cart`);
   };
   
   return (
@@ -122,6 +132,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
                 ? "w-auto px-3 bg-luxe-charcoal hover:bg-luxe-black" 
                 : "w-10 bg-luxe-charcoal hover:bg-luxe-black"
             )}
+            onClick={handleAddToCart}
           >
             <ShoppingBag className={isHovered ? "mr-2" : ""} size={16} />
             {isHovered && <span>Add to Cart</span>}
