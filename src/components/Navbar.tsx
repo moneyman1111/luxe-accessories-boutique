@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, 
   ShoppingBag, 
@@ -15,6 +15,7 @@ import { Dialog, DialogContent } from './ui/dialog';
 import { cn } from '@/lib/utils';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -33,12 +34,10 @@ const Navbar = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement search functionality
-    console.log('Searching for:', searchQuery);
-    
-    // Close search dialog and reset query
-    setIsSearchOpen(false);
-    // Don't reset query here as we'll redirect to search results
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+    }
   };
 
   const categories = [
@@ -109,7 +108,7 @@ const Navbar = () => {
               <Search size={20} />
             </button>
             
-            <Link to="/account" className="p-2 hover:bg-luxe-cream rounded-full transition-colors">
+            <Link to="/account/login" className="p-2 hover:bg-luxe-cream rounded-full transition-colors">
               <User size={20} />
             </Link>
             
@@ -168,6 +167,13 @@ const Navbar = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   About
+                </Link>
+                <Link 
+                  to="/our-story" 
+                  className="block py-2 border-b border-gray-100"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Our Story
                 </Link>
               </div>
             </nav>
