@@ -13,6 +13,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Dialog, DialogContent } from './ui/dialog';
 import { cn } from '@/lib/utils';
+import { useProducts } from '@/context/ProductContext';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { cart } = useProducts();
+  
+  // Get total quantity of items in cart
+  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
   
   // Track scroll for changing navbar appearance
   useEffect(() => {
@@ -114,9 +119,11 @@ const Navbar = () => {
             
             <Link to="/cart" className="p-2 hover:bg-luxe-cream rounded-full transition-colors relative">
               <ShoppingBag size={20} />
-              <span className="absolute top-0 right-0 bg-luxe-gold text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                0
-              </span>
+              {cartItemCount > 0 && (
+                <span className="absolute top-0 right-0 bg-luxe-gold text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>

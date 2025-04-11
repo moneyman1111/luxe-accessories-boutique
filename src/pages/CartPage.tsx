@@ -9,13 +9,15 @@ import {
   ArrowRight, 
   ArrowLeft,
   CreditCard,
-  ShieldCheck
+  ShieldCheck,
+  Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useProducts } from '@/context/ProductContext';
 import { useAuth } from '@/context/AuthContext';
 import ProductCard from '@/components/ProductCard';
+import { useToast } from "@/hooks/use-toast";
 
 const CartPage = () => {
   const { 
@@ -29,6 +31,30 @@ const CartPage = () => {
   const { isAuthenticated } = useAuth();
   const [promoCode, setPromoCode] = useState('');
   const [isApplyingPromo, setIsApplyingPromo] = useState(false);
+  const { toast } = useToast();
+  
+  // Get total quantity of items in cart
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+  
+  const handleRemoveItem = (productId: number, productName: string) => {
+    removeFromCart(productId);
+    toast({
+      title: "Item removed",
+      description: `${productName} has been removed from your cart.`,
+      variant: "default",
+    });
+  };
+  
+  const handleClearCart = () => {
+    if (cart.length > 0) {
+      clearCart();
+      toast({
+        title: "Cart cleared",
+        description: "All items have been removed from your cart.",
+        variant: "default",
+      });
+    }
+  };
   
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +64,11 @@ const CartPage = () => {
     setTimeout(() => {
       setIsApplyingPromo(false);
       // Handle promo code validation here
+      toast({
+        title: "Promo code applied",
+        description: `Promo code "${promoCode}" has been applied to your cart.`,
+        variant: "default",
+      });
       console.log('Applied promo code:', promoCode);
     }, 1000);
   };
@@ -97,14 +128,20 @@ const CartPage = () => {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
               {/* Cart Header */}
-              <div className="p-4 border-b border-gray-100 flex justify-between">
-                <p className="font-medium">
-                  {cart.length} {cart.length === 1 ? 'Item' : 'Items'}
-                </p>
+              <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+                <div>
+                  <p className="font-medium">
+                    {cart.length} {cart.length === 1 ? 'Item' : 'Items'}
+                  </p>
+                  <p className="text-sm text-luxe-charcoal/70">
+                    Total of {totalItems} {totalItems === 1 ? 'product' : 'products'}
+                  </p>
+                </div>
                 <button 
-                  onClick={clearCart}
-                  className="text-luxe-charcoal/70 hover:text-red-500 text-sm transition-colors"
+                  onClick={handleClearCart}
+                  className="text-luxe-charcoal/70 hover:text-red-500 text-sm transition-colors flex items-center"
                 >
+                  <Trash2 size={14} className="mr-1" />
                   Clear Cart
                 </button>
               </div>
@@ -114,7 +151,7 @@ const CartPage = () => {
                 {cart.map(({ product, quantity }) => (
                   <div 
                     key={product.id} 
-                    className="p-4 border-b border-gray-100 flex flex-col sm:flex-row gap-4"
+                    className="p-4 border-b border-gray-100 flex flex-col sm:flex-row gap-4 hover:bg-gray-50 transition-colors"
                   >
                     {/* Product Image */}
                     <div className="w-24 h-24 flex-shrink-0">
@@ -140,7 +177,7 @@ const CartPage = () => {
                         </div>
                         
                         <button 
-                          onClick={() => removeFromCart(product.id)}
+                          onClick={() => handleRemoveItem(product.id, product.name)}
                           className="text-luxe-charcoal/70 hover:text-red-500 transition-colors"
                           aria-label="Remove item"
                         >
@@ -214,7 +251,7 @@ const CartPage = () => {
               
               <div className="p-4 space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-luxe-charcoal/70">Subtotal</span>
+                  <span className="text-luxe-charcoal/70">Subtotal ({totalItems} items)</span>
                   <span>${cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
