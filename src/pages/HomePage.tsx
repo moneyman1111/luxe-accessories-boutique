@@ -1,10 +1,18 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useProducts } from '@/context/ProductContext';
+import { useTheme } from '@/context/ThemeContext';
+import { useTranslation } from '@/context/LanguageContext';
 import ProductCard from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem, 
+  CarouselNext, 
+  CarouselPrevious 
+} from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
 
 const CategoryCard = ({ category, image, link }: { category: string; image: string; link: string }) => (
@@ -49,55 +57,85 @@ const FeatureBox = ({
 
 const HomePage = () => {
   const { featuredProducts, newArrivals } = useProducts();
+  const { t } = useTranslation();
   
+  const heroSlides = [
+    {
+      image: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1500",
+      title: t('hero.title'),
+      subtitle: t('hero.subtitle')
+    },
+    {
+      image: "https://images.unsplash.com/photo-1611591437322-0a169a1b1889?q=80&w=1500",
+      title: t('new.arrivals'),
+      subtitle: t('hero.subtitle')
+    },
+    {
+      image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1500",
+      title: t('shop.collection'),
+      subtitle: t('hero.subtitle')
+    }
+  ];
+
   return (
     <div className="pt-20">
-      {/* Hero Section */}
-      <section className="relative h-[90vh] flex items-center">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1500" 
-            alt="Luxury Accessories" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
-        </div>
-        
-        <div className="container px-4 mx-auto relative z-10">
-          <div className="max-w-xl animate-slide-in">
-            <h5 className="text-luxe-gold uppercase tracking-wider mb-3">Elegance Redefined</h5>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6">
-              Timeless Accessories for Every Occasion
-            </h1>
-            <p className="text-white/85 text-lg mb-8">
-              Discover our collection of handcrafted, premium-quality accessories
-              designed to elevate your style.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                asChild
-                size="lg"
-                className="bg-luxe-gold hover:bg-luxe-gold/90 text-white rounded-full"
-              >
-                <Link to="/category/necklaces">
-                  Shop Collection
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-luxe-charcoal rounded-full"
-              >
-                <Link to="/about">
-                  Our Story
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
+      {/* Hero Section with Carousel */}
+      <section className="relative h-[90vh]">
+        <Carousel className="w-full h-full">
+          <CarouselContent>
+            {heroSlides.map((slide, index) => (
+              <CarouselItem key={index} className="relative h-[90vh]">
+                <div className="absolute inset-0">
+                  <img 
+                    src={slide.image}
+                    alt={slide.title} 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
+                </div>
+                
+                <div className="container px-4 mx-auto relative z-10 h-full flex items-center">
+                  <div className="max-w-xl animate-slide-in">
+                    <h5 className="text-luxe-gold uppercase tracking-wider mb-3">
+                      Elegance Redefined
+                    </h5>
+                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6">
+                      {slide.title}
+                    </h1>
+                    <p className="text-white/85 text-lg mb-8">
+                      {slide.subtitle}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <Button
+                        asChild
+                        size="lg"
+                        className="bg-luxe-gold hover:bg-luxe-gold/90 text-white rounded-full"
+                      >
+                        <Link to="/category/necklaces">
+                          {t('shop.collection')}
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        size="lg"
+                        variant="outline"
+                        className="border-white text-white hover:bg-white hover:text-luxe-charcoal rounded-full"
+                      >
+                        <Link to="/about">
+                          {t('our.story')}
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-4" />
+          <CarouselNext className="right-4" />
+        </Carousel>
       </section>
-      
+
       {/* Featured Categories */}
       <section className="py-20 bg-luxe-cream/50">
         <div className="container px-4 mx-auto">
@@ -146,7 +184,7 @@ const HomePage = () => {
               to="/new-arrivals" 
               className="mt-4 md:mt-0 inline-flex items-center font-medium hover:text-luxe-gold transition-colors"
             >
-              View All <ArrowRight size={16} className="ml-2" />
+              {t('view.all')} <ArrowRight size={16} className="ml-2" />
             </Link>
           </div>
           
