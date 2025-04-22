@@ -1,20 +1,14 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  Search, 
-  ShoppingBag, 
-  User, 
-  Menu, 
-  X, 
-  ChevronDown 
-} from 'lucide-react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Dialog, DialogContent } from './ui/dialog';
+import { Search, ShoppingBag, User, Menu, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useProducts } from '@/context/ProductContext';
 import ThemeSwitcher from './ThemeSwitcher';
 import LanguageSwitcher from './LanguageSwitcher';
+import MobileMenu from './navbar/MobileMenu';
+import SearchDialog from './navbar/SearchDialog';
+import { categories } from './navbar/categories';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -43,13 +37,6 @@ const Navbar = () => {
       setIsSearchOpen(false);
     }
   };
-
-  const categories = [
-    { name: 'Necklaces', path: '/category/necklaces' },
-    { name: 'Earrings', path: '/category/earrings' },
-    { name: 'Bracelets', path: '/category/bracelets' },
-    { name: 'Rings', path: '/category/rings' }
-  ];
 
   return (
     <>
@@ -127,101 +114,19 @@ const Navbar = () => {
         </div>
       </nav>
       
-      <div
-        className={cn(
-          "fixed inset-0 bg-white z-50 pt-20 pb-6 px-6 transform transition-transform duration-300 ease-in-out",
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
-        <div className="flex flex-col h-full">
-          <div className="flex-1">
-            <nav className="space-y-6">
-              <div className="space-y-3">
-                <p className="text-luxe-charcoal font-semibold">Shop by Category</p>
-                {categories.map((category) => (
-                  <Link 
-                    key={category.path} 
-                    to={category.path}
-                    className="block py-2 border-b border-gray-100"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {category.name}
-                  </Link>
-                ))}
-              </div>
-              
-              <div className="space-y-3">
-                <Link 
-                  to="/new-arrivals" 
-                  className="block py-2 border-b border-gray-100"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  New Arrivals
-                </Link>
-                <Link 
-                  to="/collections" 
-                  className="block py-2 border-b border-gray-100"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Collections
-                </Link>
-                <Link 
-                  to="/about" 
-                  className="block py-2 border-b border-gray-100"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  About
-                </Link>
-                <Link 
-                  to="/our-story" 
-                  className="block py-2 border-b border-gray-100"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Our Story
-                </Link>
-              </div>
-            </nav>
-          </div>
-          
-          <div className="mt-auto space-y-4">
-            <Link 
-              to="/account/login" 
-              className="block w-full text-center py-3 border border-luxe-charcoal rounded-md"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Login
-            </Link>
-            <Link 
-              to="/account/register" 
-              className="block w-full text-center py-3 bg-luxe-charcoal text-white rounded-md"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Create Account
-            </Link>
-          </div>
-        </div>
-      </div>
+      <MobileMenu 
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        categories={categories}
+      />
       
-      <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-        <DialogContent className="sm:max-w-md">
-          <form onSubmit={handleSearch} className="space-y-4">
-            <h2 className="text-xl font-serif">Search Products</h2>
-            <div className="flex items-center border-b border-gray-300 py-2">
-              <Search size={20} className="text-gray-400 mr-2" />
-              <Input
-                type="text"
-                placeholder="Search for products..."
-                className="flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Button type="submit" className="w-full bg-luxe-charcoal hover:bg-luxe-black">
-              Search
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <SearchDialog
+        isOpen={isSearchOpen}
+        onOpenChange={setIsSearchOpen}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSubmit={handleSearch}
+      />
     </>
   );
 };
