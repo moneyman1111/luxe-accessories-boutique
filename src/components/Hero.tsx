@@ -6,10 +6,10 @@ import {
   CarouselItem,
 } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
-import { useLanguage } from '@/context/LanguageContext';
+import { useTranslation } from '@/context/LanguageContext';
 
 const Hero = () => {
-  const { language } = useLanguage();
+  const { language } = useTranslation();
   
   const slides = [
     {

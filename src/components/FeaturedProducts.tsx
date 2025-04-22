@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import ProductCard from '@/components/ProductCard';
 import { useProducts } from '@/context/ProductContext';
-import { useLanguage } from '@/context/LanguageContext';
+import { useTranslation } from '@/context/LanguageContext';
 
 const FeaturedProducts = () => {
   const { products } = useProducts();
-  const { language } = useLanguage();
+  const { language } = useTranslation();
   
   // Get the first 4 products to display as featured
   const featuredProducts = products.slice(0, 4);
