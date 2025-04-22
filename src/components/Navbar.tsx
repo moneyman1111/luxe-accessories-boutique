@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -14,6 +13,8 @@ import { Input } from './ui/input';
 import { Dialog, DialogContent } from './ui/dialog';
 import { cn } from '@/lib/utils';
 import { useProducts } from '@/context/ProductContext';
+import ThemeSwitcher from './ThemeSwitcher';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -23,10 +24,8 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const { cart } = useProducts();
   
-  // Get total quantity of items in cart
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
   
-  // Track scroll for changing navbar appearance
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -58,12 +57,11 @@ const Navbar = () => {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300",
           isScrolled 
-            ? "py-3 bg-white/95 backdrop-blur-md shadow-sm" 
+            ? "py-3 bg-white/95 backdrop-blur-md shadow-sm dark:bg-black/95" 
             : "py-5 bg-transparent"
         )}
       >
         <div className="container px-4 mx-auto flex items-center justify-between">
-          {/* Mobile menu button */}
           <button 
             className="lg:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -72,14 +70,12 @@ const Navbar = () => {
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
           
-          {/* Logo */}
           <div className="flex-1 lg:flex-initial text-center lg:text-left">
             <Link to="/" className="inline-block">
               <h1 className="text-2xl font-serif font-semibold">LUXE</h1>
             </Link>
           </div>
           
-          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
             <div className="relative group">
               <button className="flex items-center space-x-1 py-2">
@@ -103,7 +99,6 @@ const Navbar = () => {
             <Link to="/about" className="py-2">About</Link>
           </div>
           
-          {/* Icons */}
           <div className="flex items-center space-x-4">
             <button 
               onClick={() => setIsSearchOpen(true)}
@@ -116,6 +111,9 @@ const Navbar = () => {
             <Link to="/account/login" className="p-2 hover:bg-luxe-cream rounded-full transition-colors">
               <User size={20} />
             </Link>
+
+            <ThemeSwitcher />
+            <LanguageSwitcher />
             
             <Link to="/cart" className="p-2 hover:bg-luxe-cream rounded-full transition-colors relative">
               <ShoppingBag size={20} />
@@ -129,7 +127,6 @@ const Navbar = () => {
         </div>
       </nav>
       
-      {/* Mobile Menu */}
       <div
         className={cn(
           "fixed inset-0 bg-white z-50 pt-20 pb-6 px-6 transform transition-transform duration-300 ease-in-out",
@@ -205,7 +202,6 @@ const Navbar = () => {
         </div>
       </div>
       
-      {/* Search Dialog */}
       <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
         <DialogContent className="sm:max-w-md">
           <form onSubmit={handleSearch} className="space-y-4">
