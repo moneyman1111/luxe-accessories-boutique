@@ -20,18 +20,22 @@ const HomePage = () => {
   
   return (
     <div className="min-h-screen">
-      <Carousel 
-        className="w-full max-w-5xl mx-auto"
-        opts={{
-          align: "start",
-          loop: true,
-        }}
-        setApi={setApi}
-      >
-        <Hero />
-      </Carousel>
-      
+      {/* Featured Products section now appears first */}
       <FeaturedProducts />
+      
+      {/* Carousel moved to the bottom of the page */}
+      <div className="mt-12">
+        <Carousel 
+          className="w-full max-w-5xl mx-auto"
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          setApi={setApi}
+        >
+          <Hero />
+        </Carousel>
+      </div>
     </div>
   );
 };
